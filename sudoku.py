@@ -3,8 +3,10 @@
 sudoku.py
 
 '''
+import pdb
 import sys
 import time
+
 import numpy as np
 
 from special_test_cases import TEST_CASE_2
@@ -66,20 +68,20 @@ def check_puzzle_valid(puzzle):
     return True
 
 
-def _get_used_in_square(puzzle, i, j):
+def _get_square(puzzle, i, j):
     i = int(i/3)*3
     j = int(j/3)*3
-    square = puzzle[i:i+3, j:j+3]
-    return square[square > 0]
+    return puzzle[i:i+3, j:j+3].flatten()
 
 
 def get_possible_numbers(puzzle, i, j):
     if ORIG_PUZZLE[i, j] > 0:
         return [ORIG_PUZZLE[i, j]]
     else:
-        used_in_row = puzzle[i, puzzle[i, :] > 0]
-        used_in_col = puzzle[puzzle[:, j] > 0, j]
-        used_in_square = _get_used_in_square(puzzle, i, j)
+        used_in_row = puzzle[i, :]
+        used_in_col = puzzle[:, j]
+        used_in_square = _get_square(puzzle, i, j)
+
         return (NUMBERS_SET -
                 set(used_in_row) -
                 set(used_in_col) -
@@ -94,8 +96,7 @@ def solve_puzzle(puzzle, n=0):
 
     :return: the solved puzzle or False
     '''
-    i = int(n / L)
-    j = n % L
+    i, j = divmod(n, L)
 
     if n == N-1:
         if check_puzzle_valid(puzzle):
