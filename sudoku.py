@@ -16,6 +16,7 @@ assert n_rows == n_cols
 L = n_rows
 N = L**2
 ORIG_PUZZLE = puzzle.copy()
+NUMBERS_SET = set(range(1, L+1))
 
 
 def _check_rows(puzzle):
@@ -77,9 +78,9 @@ def get_possible_numbers(puzzle, i, j):
         return [ORIG_PUZZLE[i, j]]
     else:
         used_in_row = puzzle[i, puzzle[i, :] > 0]
-        used_in_col = puzzle[puzzle[j, :] > 0, j]
+        used_in_col = puzzle[puzzle[:, j] > 0, j]
         used_in_square = _get_used_in_square(puzzle, i, j)
-        return (set(range(1, L+1)) -
+        return (NUMBERS_SET -
                 set(used_in_row) -
                 set(used_in_col) -
                 set(used_in_square))
